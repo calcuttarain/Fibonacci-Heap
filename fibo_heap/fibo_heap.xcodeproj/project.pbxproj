@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F9694F1D2BA4A10A0035770B /* Nod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9694F1B2BA4A10A0035770B /* Nod.cpp */; };
+		F9694F202BA4A2500035770B /* Fibo_Heap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9694F1E2BA4A2500035770B /* Fibo_Heap.cpp */; };
 		F9AEBD382A05F5580079D101 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F9AEBD372A05F5580079D101 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F9694F1B2BA4A10A0035770B /* Nod.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Nod.cpp; sourceTree = "<group>"; };
+		F9694F1C2BA4A10A0035770B /* Nod.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Nod.hpp; sourceTree = "<group>"; };
+		F9694F1E2BA4A2500035770B /* Fibo_Heap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Fibo_Heap.cpp; sourceTree = "<group>"; };
+		F9694F1F2BA4A2500035770B /* Fibo_Heap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Fibo_Heap.hpp; sourceTree = "<group>"; };
 		F9AEBD342A05F5580079D101 /* fibo_heap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fibo_heap; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9AEBD372A05F5580079D101 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -41,6 +47,10 @@
 		F9AEBD2B2A05F5580079D101 = {
 			isa = PBXGroup;
 			children = (
+				F9694F1B2BA4A10A0035770B /* Nod.cpp */,
+				F9694F1E2BA4A2500035770B /* Fibo_Heap.cpp */,
+				F9694F1F2BA4A2500035770B /* Fibo_Heap.hpp */,
+				F9694F1C2BA4A10A0035770B /* Nod.hpp */,
 				F9AEBD362A05F5580079D101 /* fibo_heap */,
 				F9AEBD352A05F5580079D101 /* Products */,
 			);
@@ -120,6 +130,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9AEBD382A05F5580079D101 /* main.cpp in Sources */,
+				F9694F202BA4A2500035770B /* Fibo_Heap.cpp in Sources */,
+				F9694F1D2BA4A10A0035770B /* Nod.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

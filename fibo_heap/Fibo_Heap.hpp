@@ -25,46 +25,7 @@ public:
     
     void display();
     
-//    void display()
-//    {
-//        if(nr_radacini > 0)
-//        {
-//            Nod *i = min->stanga;
-//            cout << "\tRadacinile din heap: ";
-//            while (i != NULL)
-//            {
-//                cout << i->valoare << ", ";
-//                i = i->stanga;
-//            }
-//            i = min->dreapta;
-//            while (i != NULL)
-//            {
-//                cout << i->valoare << ", ";
-//                i = i->dreapta;
-//            }
-//            cout << min->valoare << "." << endl;
-//            if(grad_maxim > 0)
-//            {
-//                cout << "\tArborii: " << endl;
-//                Nod*i = min->stanga;
-//                while(i != NULL)
-//                {
-//                    i->display();
-//                    i = i->stanga;
-//                }
-//                i = min->dreapta;
-//                while(i != NULL)
-//                {
-//                    i->display();
-//                    i = i->dreapta;
-//                }
-//                min->display();
-//            }
-//            cout << "\tMinimul: " << min->valoare << endl;
-//            cout << "\tNumarul radacinilor: " << this->nr_radacini << endl;
-//        }
-//        else cout << "Hipul este gol." << endl;
-//    }
+    ~FiboHeap();
     
 //    FiboHeap& reuniune(FiboHeap &f)
 //    {

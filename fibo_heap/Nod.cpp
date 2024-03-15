@@ -1,6 +1,6 @@
 #include "Nod.hpp"
 
-void Nod::display() //reluat, arat la fiecare nod fiii pe nivele
+void Nod::display() //de reluat, arat la fiecare nod fiii pe nivele
 {
     if(grad == 0)
         std::cout << "Nodul " << valoare << " nu are fii" << std::endl;

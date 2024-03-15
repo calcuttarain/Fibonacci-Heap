@@ -3,6 +3,7 @@
 #include "Fibo_Heap.hpp"
 using namespace std;
 
+bool ok;
 
 int main()
 {
@@ -12,6 +13,6 @@ int main()
     F.inserare(1);
     F.inserare(8);
     F.extragereMin();
-    F.display();
+    cout << ok;
 }
 

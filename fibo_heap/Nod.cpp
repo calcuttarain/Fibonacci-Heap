@@ -1,24 +1,116 @@
 #include "Nod.hpp"
 
-void Nod::display() //de reluat, arat la fiecare nod fiii pe nivele
+void ListaNoduri::appendNod(int valoare)
 {
-    if(grad == 0)
-        std::cout << "Nodul " << valoare << " nu are fii" << std::endl;
-    else
+    Nod* nou = new Nod(valoare);
+
+    if (cap == nullptr)
     {
-        std::cout << "Nodul " << valoare << " are urmatorii fii: ";
-        Nod* i = fiu;
-        while(i != NULL)
-        {
-            std::cout << i->valoare << " ";
-            i = i->dreapta;
-        }
-        std::cout << std::endl;
-        i = fiu->dreapta;
-        while(i != NULL)
-        {
-            i->display();
-            i = i->dreapta;
-        }
+        cap = nou;
+        coada = nou;
+        cap->stanga = coada;
+        coada->dreapta = cap;
+    }
+    else 
+    {
+        coada->stanga = nou;
+        nou->dreapta = coada;
+        nou->stanga = cap;
+        cap->dreapta = nou;
+        coada = nou;
     }
 }
+
+void ListaNoduri::appendNod(Nod* nou)
+{
+    if (cap == nullptr)
+    {
+        cap = nou;
+        coada = nou;
+        cap->stanga = coada;
+        coada->dreapta = cap;
+    }
+    else
+    {
+        coada->stanga = nou;
+        nou->dreapta = coada;
+        nou->stanga = cap;
+        cap->dreapta = nou;
+        coada = nou;
+    }
+}
+
+void ListaNoduri::unionList(ListaNoduri * lista) 
+{
+    if (cap == nullptr) 
+    {
+        cap = lista->cap;
+        coada = lista->coada;
+    } 
+    else if (lista->cap != nullptr)
+    {
+        coada->dreapta = lista->cap;
+        lista->cap->stanga = coada;
+        coada = lista->coada;
+        coada->dreapta = cap;
+        cap->stanga = coada;
+    }
+
+    delete lista;
+}
+
+void ListaNoduri::deleteNod(Nod* nod)
+{
+    if(cap == coada)
+    {
+        cap = nullptr;
+        coada = nullptr;
+    }
+    else if (nod == cap)
+    {
+        cap = cap->dreapta;
+        cap->stanga = coada;
+        coada->dreapta = cap;
+    }
+    else if (nod == coada)
+    {
+        coada = coada->stanga;
+        coada->dreapta = cap;
+        cap->stanga = coada;
+    } 
+    else
+    {
+        nod->dreapta->stanga = nod->stanga;
+        nod->stanga->dreapta = nod->dreapta;
+    }
+    delete nod;
+}
+
+Nod* ListaNoduri::popNod(Nod* nod)
+{
+    if(cap == coada)
+    {
+        cap = nullptr;
+        coada = nullptr;
+    }
+    if (nod == cap)
+    {
+        cap = cap->stanga;
+        cap->dreapta = coada;
+        
+        coada->stanga = cap;
+    }
+    else if (nod == coada)
+    {
+        coada = coada->dreapta;
+        coada->stanga = cap;
+        cap->dreapta = coada;
+    }
+    else
+    {
+        nod->dreapta->stanga = nod->stanga;
+        nod->stanga->dreapta = nod->dreapta;
+    }
+    return nod;
+}
+

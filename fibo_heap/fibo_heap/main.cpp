@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include "Fibo_Heap.hpp"
 using namespace std;
 
@@ -12,7 +11,13 @@ int main()
     F.inserare(3);
     F.inserare(1);
     F.inserare(8);
+    F.inserare(9);
     F.extragereMin();
-    cout << ok;
+    F.extragereMin();
+    F.extragereMin();
+    F.extragereMin();
+    F.extragereMin();
+    F.display();
+    
 }
 

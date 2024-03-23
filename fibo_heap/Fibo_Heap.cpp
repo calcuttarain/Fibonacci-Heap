@@ -2,55 +2,21 @@
 
 void FiboHeap::inserare(int valoare)
 {
-    Nod* nod = new Nod(valoare);
-    //lista dublu inlantuita circulara
     if(!min)
     {
-        min = nod;
-        nod->stanga = nod;
-        nod->dreapta = nod;
+        ListaNoduri* lista = new ListaNoduri();
+        lista->appendNod(valoare);
+        min = lista->cap;
+        radacini = lista;
+        //delete lista;
     }
     //inserez la stanga minimului O(1) + actualizez min
     else
     {
-        if(!min->stanga)
-            min->stanga = nod;
-        else
-        {
-            Nod* stanga_min = min->stanga;
-            nod->dreapta = min;
-            nod->stanga = min->stanga;
-            min->stanga = nod;
-            nod->stanga = stanga_min;
-        }
-        if(min->valoare > nod->valoare)
-            min = nod;
-    }
-    nr_radacini++;
-}
-
-void FiboHeap::inserare(Nod* nod)
-{
-    if(!min)
-    {
-        min = nod;
-        nod->stanga = nod;
-        nod->dreapta = nod;
-    }
-    else
-    {
-        if(!min->stanga)
-            min->stanga = nod;
-        else
-        {
-            Nod* stanga_min = min->stanga;
-            nod->dreapta = min;
-            nod->stanga = min->stanga;
-            min->stanga = nod;
-            nod->stanga = stanga_min;
-        }
-        if(min->valoare > nod->valoare)
-            min = nod;
+        Nod* nou = new Nod(valoare);
+        radacini->appendNod(nou);
+        if(valoare < min->valoare)
+            min = nou;
     }
     nr_radacini++;
 }
@@ -62,123 +28,111 @@ int FiboHeap::getMin()
 
 void FiboHeap::reuniuneBin() //payback time
 {
-    //facem un vector de grad_max+1 elemente in care stocam referinta la subarbore pe pozitia corespunzatoare intaltimii lui
-    std::vector<Nod*> grade(grad_maxim + 1, nullptr);
-    int locuri_ocupate = 1;
-    grade[min->grad] = min;
-    Nod* i = min->stanga;
-    //practic, reuniunea e gata atunci cand fiecare radacina e in acel vector de grade (cand fiecare radacina are inaltimea diferita)
-    while(locuri_ocupate != this->nr_radacini)
+    std::vector<std::vector<Nod*>> grade(grad_maxim + 1);
+    Nod* nod = radacini->cap;
+    do {
+        grade[nod->grad].push_back(nod);
+        nod = nod->stanga;
+    } while (nod != radacini->cap);
+    int i = 0;
+    //parcurg vectorul de grade
+    while(i != grade.size())
     {
-        //si acum efectiv fac cu i doar!!!
-        while(grade[i->grad]) //cat timp se tot unesc arbori
+        //cat timp exista mai multe radacini cu gradul i
+        while(grade[i].size() > 1)
         {
-            //aici scriu ce se intampla cand i da de o alta radacina pe grade[i->grad] + la final decrementez radacinile
-            Nod* fiu_i;
-            //care e mai mic
-            if(i->valoare < grade[i->grad]->valoare)
-                fiu_i = grade[i->grad];
+            Nod* mn;
+            Nod* mx;
+            if(grade[i][grade[i].size()-1]->valoare < grade[i][grade[i].size()-2]->valoare)
+            {
+                mn = grade[i][grade[i].size()-1];
+                mx = grade[i][grade[i].size()-2];
+            }
             else
             {
-                fiu_i = i;
-                i = grade[i->grad];
+                mn = grade[i][grade[i].size()-2];
+                mx = grade[i][grade[i].size()-1];
             }
+            //sterg pe ala mai mare din radacini
+            mx = radacini->popNod(mx);
+            mx->tata = mn;
+            //il adaug la fii
+            ListaNoduri* lista_fii = new ListaNoduri(mn->cap_fii, mn->coada_fii);
+            lista_fii->appendNod(mx);
+            mn->cap_fii = lista_fii->cap;
+            mn->coada_fii = lista_fii->coada;
             
-            //acum il scoatem din lista de radacini pe cel mai mare -> aici ar putea fi o pb si la stergerea minimului !ba nu, doar daca radacinile au un sg element(cred)
-            Nod* f_stanga = fiu_i->stanga;
-            Nod* f_dreapta = fiu_i->dreapta;
-            if(!f_stanga)
-                f_stanga->dreapta = f_dreapta;
-            if(!f_dreapta)
-                f_dreapta->stanga = f_stanga;
-            
-            //daca e inaltimea 0 => fiul va fi primul din lista circulara dublu-inlantuita
-            if(i->grad == 0)
+            delete lista_fii;
+            mn->grad++;
+            grade[i].pop_back();
+            grade[i].pop_back();
+            if(i+1 >= grade.size())
             {
-                fiu_i->tata = i;
-                i->fiu = fiu_i; //asta nu mai tb daca h != 0
-                fiu_i->stanga = fiu_i;
-                fiu_i->dreapta = fiu_i;
+                grade.push_back({mn});
+                grad_maxim ++;
             }
-            //altfel il inserez la stanga fiului 1
             else
-            {
-                fiu_i->tata = i;
-                Nod* stanga_fiu_mare = i->fiu->stanga;
-                i->fiu->stanga = fiu_i;
-                fiu_i->dreapta = i->fiu;
-                fiu_i->stanga = stanga_fiu_mare;
-                stanga_fiu_mare->dreapta = fiu_i;
-            }
-            i->grad ++;
+                grade[i+1].push_back(mn);
         }
-        grade[i->grad] = i;
-        locuri_ocupate ++;
-        i = i->stanga;
+        i++;
+        
     }
-    
+    //reactualizez minimul
+    nod = radacini->cap;
+    do {
+        if(nod->valoare < min->valoare)
+            min = nod;
+        nod = nod->stanga;
+    } while (nod != radacini->cap);
 }
 
 void FiboHeap::extragereMin()
 {
-    //std::cout << "Minimul extras are valoarea " << getMin() << std::endl;
     //daca minimul are fii, ii inserez in lista de radacini
-    if(min->fiu)
+    if(min->cap_fii != nullptr)
     {
         //unlink
-        Nod* min_fiu = min->fiu;
-        min_fiu->tata = nullptr;
-        min->fiu = nullptr;
+        Nod* min_cap_fii = min->cap_fii;
+        Nod* min_coada_fii = min->coada_fii;
+        ListaNoduri* fii = new ListaNoduri(min_cap_fii, min_coada_fii);
         
-        if(min->grad == 1)
-        {
-            this->inserare(min_fiu);
-        }
-        else
-        {
-            Nod* i = min_fiu;
-            //aici foloseste faptul ca listele sunt circulare
-            while (i->stanga != min_fiu)
-            {
-                //bye tata
-                i->tata = nullptr;
-                i = i->stanga;
-                nr_radacini ++;
-            }
-            nr_radacini --;
-            //iau toata lista dublu inlantuita si o inserez la stanga minimului
-            Nod *min_stanga = min->stanga;
-            min->stanga = i;
-            i->dreapta = min;
-            min_fiu->stanga = min_stanga;
-            if(min_stanga)
-                min_stanga->dreapta = min_fiu;
-        }
+        Nod* i = min_cap_fii;
+        do {
+            i -> tata = nullptr;
+            i = i->stanga;
+            nr_radacini++;
+        } while (i != min_cap_fii);
+        
+        radacini->unionList(fii);
     }
+
+
+    radacini->deleteNod(min);
     
-    //sterg minimul
-    Nod* temp = min;
-    Nod* min_dreapta = min->dreapta;
-    min = min->stanga;
-    min->dreapta = min_dreapta;
-    min_dreapta->stanga = min;
-    delete temp;
+    min = radacini->cap;
+        
     
     //"reuniune" heap binomial
-    if(nr_radacini > 1)
+    if(radacini->cap != nullptr)
         this->reuniuneBin();
 }
 
 void FiboHeap::display()
 {
-    std::cout << "Minimul: " << this->getMin() << std::endl;
-    std::cout << "Radacini: ";
-    Nod* i = min;
-    do {
-        std::cout << i->valoare << " ";
-        i = i->stanga;
-    } while (i != min);
+    if (radacini->cap == nullptr)
+    {
+        std::cout << "Heapul nu are radacini!" << std::endl;
+        return;
+    }
+    std::cout << "Minimul: " << getMin() << std::endl;
+    Nod* curent = radacini->cap;
+    std::cout << "Radacinile: ";
+    do
+    {
+        std::cout << curent->valoare << " ";
+        curent = curent->dreapta;
+    } while (curent != radacini->cap);
+    std::cout << std::endl;
 }
 
-//cum lista e circulara, sa am grija sa nu pastrez min cand il scot ptc am referinta de la el la el (oare e o pb?)
-//nu merge extragere_min pt o sg radacina
+
